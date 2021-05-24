@@ -6,15 +6,12 @@ const config = require('../../config');
 const router = require('./router/user')
 
 
-
-app.use(bodyParser.urlencoded({extends:true}));
-app.use(bodyParser.json())
-
 app.use(cors())
 
 app.use('/',router)
 
 console.log(`Starting with port ${config.port}`)
+app.listen(config.port,() => {`Starting with port ${config.port}`})
 
 
 

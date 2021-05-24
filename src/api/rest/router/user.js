@@ -3,7 +3,7 @@ const router = express.Router()
 const validate = require('validator')
 const userService = require('../../../services/user')
 
-router.post('/register',async(req,res) => {
+router.post('/register',async(req,res,next) => {
     try {
         var {body} = req
         if(!body.userName) {
@@ -12,7 +12,12 @@ router.post('/register',async(req,res) => {
         if(!body.password) {
             console.log('Password was empty.');
         }
-        else if(!body.confirmPassword)
+        else if(!body.confirmPassword){
+            console.log('Confirm Password was empty')
+        }
+        else if(body.confirmPassword !== body.password) {
+            console.log('The password is not match.')
+        }
         if(!body.firstName){
             console.log('Firstname was empty.');
         }
@@ -29,8 +34,7 @@ router.post('/register',async(req,res) => {
             console.log('Phonenumber was empty')
         }
 
-        const user = userService.register(body,req.get('host'))
-
+        const user = userService.register(body)
         res.json(user)
     }
     catch(error){
@@ -38,7 +42,7 @@ router.post('/register',async(req,res) => {
     }
 })
 
-router.post('/login',async (req,res) => {
+router.post('/login',async (req,res,next) => {
     try{
         var {body} = req
         if(!userName){
