@@ -1,0 +1,24 @@
+{
+  "name": "api_test01",
+  "version": "1.0.0",
+  "description": "API Test",
+  "main": "index.js",
+  "repository": "https://github.com/Petchy112/api_test01.git",
+  "author": "Kittikan Ditkhanan <petch_501_@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.10",
+    "mongoose-delete": "^0.5.3",
+    "mongoose-hidden": "^1.9.1",
+    "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  }
+}
