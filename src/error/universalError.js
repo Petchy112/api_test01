@@ -7,12 +7,12 @@ class UniversalError extends Error {
     status = 400
     message = 'request/invalid'
     
-    constructor(error ={key,message}){
+    constructor(error ={key,message,},message = 'request/invalid',status=400){
         super(message)
         this.status = status
         this.message = message
 
-        if(oc(error),length > 0){
+        if(oc(error),length > 0) {
             error.forEach(error => {
                 this.addError(error.key,error.message)
             });
