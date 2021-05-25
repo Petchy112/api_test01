@@ -1,26 +1,25 @@
 
 const User = require('../models/userModel')
 
-const Service = {
+const thisService = {
     async register(input) {
         console.log('register called',input)
         
-        const user = new User
-        user.userName = userName,
-        user.email = email,
-        user.password = password,
-        user.firstName = firstName,
-        user.lastName = lastName,
-        user,phoneNumber = phoneNumber
+        const user = new User();
+        user.userName = input.userName,
+        user.password = input.password,
+        user.confirmPassword = input.confirmPassword
+        user.firstName = input.firstName,
+        user.lastName = input.lastName,
+        user.email = input.email,
+        user.phoneNumber = input.phoneNumber
         
-        await user.save()
-        
-        var isExist = await User.findOne({email: email})
+        var isExist = await User.findOne({email: input.email})
         if(isExist) {
             console.log('The email is already use')
         }
-
-    }   
+        await user.save()
+    },
 }
 
-module.exports = Service
+module.exports = thisService

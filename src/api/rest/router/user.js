@@ -1,10 +1,13 @@
 const express = require('express')
+const User = require('../../../models/userModel')
 const router = express.Router()
-const validate = require('validator')
 const userService = require('../../../services/user')
+const validate = require('validator')
+const UniversalError = require('./../../../error/universalError')
 
 router.post('/register',async(req,res,next) => {
     try {
+        var errors = new UniversalError
         var {body} = req
         if(!body.userName) {
             console.log('Username was empty.');
@@ -33,12 +36,11 @@ router.post('/register',async(req,res,next) => {
         if(!body.phoneNumber) {
             console.log('Phonenumber was empty')
         }
-
-        const user = userService.register(body)
+        const user = await userService.register(body)
         res.json(user)
     }
     catch(error){
-        next(error);
+       next(error);
     }
 })
 
