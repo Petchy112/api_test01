@@ -1,9 +1,8 @@
 const database = require('./database')
-const REST = require('./api/rest')
+const restAPI = require('./api/rest/index')
 
-const start = async () => {
+const start = async() => {
     await database()
-    REST()
-
+    restAPI()
 }
 start()
