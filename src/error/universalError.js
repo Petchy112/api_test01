@@ -1,5 +1,6 @@
-import {oc} from ('js-optchain')
+const {oc} = require('js-optchain')
 
+var key;
 class UniversalError extends Error {
     state = {}
     amount = 0
@@ -7,13 +8,14 @@ class UniversalError extends Error {
     status = 400
     message = 'request/invalid'
     
-    constructor(error ={key,message,},message = 'request/invalid',status=400){
+    
+    constructor(errors = {key,message}, message = 'request/invalid', status = 400) {
         super(message)
         this.status = status
         this.message = message
 
-        if(oc(error),length > 0) {
-            error.forEach(error => {
+        if(oc(errors),length > 0) {
+            errors.forEach(error => {
                 this.addError(error.key,error.message)
             });
         }
@@ -23,3 +25,4 @@ class UniversalError extends Error {
         this.amount++
     }
 }
+module.exports = UniversalError
