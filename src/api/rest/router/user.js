@@ -7,7 +7,6 @@ const UniversalError = require('./../../../error/universalError')
 
 router.post('/register',async(req,res,next) => {
     try {
-        var errors = new UniversalError
         var {body} = req
         if(!body.userName) {
             console.log('Username was empty.');
@@ -47,13 +46,13 @@ router.post('/register',async(req,res,next) => {
 router.post('/login',async (req,res,next) => {
     try{
         var {body} = req
-        if(!userName){
+        if(!body.userName){
             console.log('Username was empty');
         }
-        if(!password){
+        if(!body.password){
             console.log('Password was empty');
         }
-        const user = await userService.login(body.email,body.password)
+        const user = await userService.login(body)
         res.json(user)
     }
     catch (error){
