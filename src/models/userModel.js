@@ -3,16 +3,17 @@ const mongoose = require('mongoose')
 var schema = mongoose.Schema (
     {
         userName :{
-            type:String
-        },
-        password :{
             type:String,
             require:true
         },
-        confirmPassword : {
+        passwordHash :{
             type:String,
             require:true
         },
+        // confirmPassword : {
+        //     type:String,
+        //     require:true
+        // },
         firstName : {
             type:String,
             require:true

@@ -1,9 +1,9 @@
 const express = require('express')
-const User = require('../../../models/userModel')
 const router = express.Router()
 const userService = require('../../../services/user')
 const validate = require('validator')
-const UniversalError = require('./../../../error/universalError')
+
+
 
 router.post('/register',async(req,res,next) => {
     try {
@@ -57,6 +57,28 @@ router.post('/login',async (req,res,next) => {
     }
     catch (error){
         next(error);
+    }
+})
+router.post('/change/password',async (req,res,next) => {
+    try {
+        var {body} = req
+        if(!body.oldPassword) {
+            console.log('Old password was empty')
+        }
+        if(!body.newPassword) {
+            console.log('New password was empty');
+        }
+        if(!body.confirmPassword){
+            console.log('New Password was empty');
+        }
+        if(body.confirmPassword !== body.newPassword){
+            console.log('Password is not match!')
+        }
+        const user = await userService.changePassword(body)
+        res.json(user)
+    }
+    catch(error){
+        next(error)
     }
 })
 
