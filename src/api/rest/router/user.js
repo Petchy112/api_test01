@@ -2,20 +2,24 @@ const express = require('express')
 const router = express.Router()
 const userService = require('../../../services/user')
 const validate = require('validator')
-
+const UniversalError = require('../../../error/universalError')
 
 
 router.post('/register',async(req,res,next) => {
     try {
         var {body} = req
+        var errors = new UniversalError()
         if(!body.userName) {
-            console.log('Username was empty.');
+            await res.json('Username was empty.');
+            next(error)
         }
-        if(!body.password) {
-            console.log('Password was empty.');
+        else if(!body.password) {
+            await res.json('Password was empty.');
+            return
         }
         else if(!body.confirmPassword){
             console.log('Confirm Password was empty')
+            errors.addError('empty/confirm','it was empty')
         }
         else if(body.confirmPassword !== body.password) {
             console.log('The password is not match.')
@@ -35,6 +39,7 @@ router.post('/register',async(req,res,next) => {
         if(!body.phoneNumber) {
             console.log('Phonenumber was empty')
         }
+        
         const user = await userService.register(body)
         res.json(user)
     }
@@ -46,13 +51,19 @@ router.post('/register',async(req,res,next) => {
 router.post('/login',async (req,res,next) => {
     try{
         var {body} = req
-        if(!body.userName){
-            console.log('Username was empty');
+        //var errors = new UniversalError()
+        if(!body.userName) {
+            console.log('Username was empty')
+            //errors.addError('empty/userName','Username was empty');
         }
-        if(!body.password){
-            console.log('Password was empty');
+        if(!body.password) {
+            console.log('Password was empty')
+            //errors.addError('empty/password','Password was empty');
         }
-        const user = await userService.login(body)
+        // if (errors.amount > 0) {
+        //     throw error
+        // }
+        const user = await userService.login(body.userName,body.password)
         res.json(user)
     }
     catch (error){

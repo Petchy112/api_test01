@@ -1,15 +1,16 @@
-const {oc} = require('js-optchain')
+const oc = require('js-optchain')
 
-var key;
+
+var key,message,status
 class UniversalError extends Error {
-    state = {}
+    state = Object
     amount = 0
     universal = true
     status = 400
     message = 'request/invalid'
     
-    
-    constructor(errors = {key,message}, message = 'request/invalid', status = 400) {
+
+    constructor(errors = {key,message}) {
         super(message)
         this.status = status
         this.message = message
