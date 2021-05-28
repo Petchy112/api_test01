@@ -8,7 +8,7 @@ const UniversalError = require('../../../error/universalError')
 router.post('/register',async(req,res,next) => {
     try {
         var {body} = req
-        var errors = new UniversalError()
+        //var errors = new UniversalError()
         if(!body.userName) {
             await res.json('Username was empty.');
             next(error)
@@ -18,30 +18,36 @@ router.post('/register',async(req,res,next) => {
             return
         }
         else if(!body.confirmPassword){
-            console.log('Confirm Password was empty')
-            errors.addError('empty/confirm','it was empty')
+            await res.json ('Confirm Password was empty')
+            return
         }
         else if(body.confirmPassword !== body.password) {
-            console.log('The password is not match.')
+            await res.json('The password is not match.')
+            return
         }
         if(!body.firstName){
-            console.log('Firstname was empty.');
+            await res.json('Firstname was empty.');
+            return
         }
         if(!body.lastName){
-            console.log('Lastname was empty.');
+            await res.json('Lastname was empty.');
+            return
         }
         if(!body.email) {
-            console.log('Email was empty');
+            await res.json('Email was empty');
+            return
         }
         else if(body.email && !validate.isEmail(body.email)) {
-            console.log('Email is invalid.')
+            await res.json('Email is invalid.')
+            return
         }
         if(!body.phoneNumber) {
-            console.log('Phonenumber was empty')
+            await res.json('Phonenumber was empty')
+            return
         }
         
         const user = await userService.register(body)
-        res.json(user)
+        res.json({Message:'Done'})
     }
     catch(error){
        next(error);
@@ -64,7 +70,7 @@ router.post('/login',async (req,res,next) => {
         //     throw error
         // }
         const user = await userService.login(body.userName,body.password)
-        res.json(user)
+        res.json({Message:'Login Successful'})
     }
     catch (error){
         next(error);
@@ -74,19 +80,19 @@ router.post('/change/password',async (req,res,next) => {
     try {
         var {body} = req
         if(!body.oldPassword) {
-            console.log('Old password was empty')
+            await res.json('Old password was empty')
         }
         if(!body.newPassword) {
-            console.log('New password was empty');
+            await res.json('New password was empty');
         }
         if(!body.confirmPassword){
-            console.log('New Password was empty');
+            await res.json('New Password was empty');
         }
         if(body.confirmPassword !== body.newPassword){
-            console.log('Password is not match!')
+            await res.json('Password is not match!')
         }
         const user = await userService.changePassword(req.query.userName,body.oldPassword,body.newPassword)
-        res.json(user)
+        res.json({Message:'Password Changed'})
     }
     catch(error){
         next(error)

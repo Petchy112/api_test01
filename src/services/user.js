@@ -16,12 +16,12 @@ const thisService = {
         var isExistEmail = await User.findOne({email: input.email})
         if(isExistEmail) {
             console.log('The email is already use!')
-            
+            return
         }
         var isExistUsername = await User.findOne({userName: input.userName})
         if(isExistUsername) {
             console.log('Username is already use!')
-            
+            return
         }
         await user.save()
     },
