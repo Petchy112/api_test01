@@ -85,7 +85,7 @@ router.post('/change/password',async (req,res,next) => {
         if(body.confirmPassword !== body.newPassword){
             console.log('Password is not match!')
         }
-        const user = await userService.changePassword(body)
+        const user = await userService.changePassword(req.query.userName,body.oldPassword,body.newPassword)
         res.json(user)
     }
     catch(error){

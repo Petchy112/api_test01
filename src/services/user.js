@@ -34,38 +34,31 @@ const thisService = {
                 if(thisUser.passwordHash !== password){
                     console.log('Password was invalid')
                     return
+                }else {
+                    console.log('login successful')
                 }
-                console.log('login successful')
             }
             else {
                 console.log('Username was invalid')
                 
             }
         },
-    async changePassword(input){
-        console.log(input.oldPassword)
-        try {
-            var newPassword = await User.findOne({$and: [{oldPassword},{password:input.password}]})
-            var checkUser = await User.findOne({userName:thisUser})
-            if (newPassword) {
-                console.log('Password is the same , Please change to new password')
-                // console.log(id)
+    async changePassword(userName,oldPassword,newPassword){
+        var thisUser = await User.findOne({userName})
+        
+        if(thisUser) {
+            console.log(thisUser.passwordHash)
+            if(thisUser.passwordHash !== oldPassword){
+                console.log('Old password was invalid')
+            }else{
+                thisUser.passwordHash = newPassword
+                thisUser.save()
             }
-            if(!checkUser){
-                console.log('Username invalid')
-            }
-            else {
-                var setNewPassword = await User.findOneAndUpdate({password:input.password})
-                if(setNewPassword){
-                    console.log('Password is changed')
-                }
-            }
+           
             
-        }
-        catch (error) {
-            throw error
-        }
+        }    
     }
 }
+
 
 module.exports = thisService
