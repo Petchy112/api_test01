@@ -3,6 +3,7 @@ const UniversalError = require('../error/UniversalError');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const userAuthToken = require('../models/userAuthModel')
+const sha1 = require('js-sha1')
 
 
 
@@ -12,11 +13,12 @@ const thisService = {
 
         const user = new User();
         user.userName = input.userName,
-        user.passwordHash = input.password,
+        user.passwordHash = sha1(input.password),
         user.firstName = input.firstName,
         user.lastName = input.lastName,
         user.email = input.email,
         user.phoneNumber = input.phoneNumber
+
         
         var isExistEmail = await User.findOne({email: input.email})
         if(isExistEmail) {
