@@ -1,6 +1,5 @@
 const User = require('../models/userModel')
 const UniversalError = require('../error/UniversalError');
-const { response } = require('express');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const userAuthToken = require('../models/userAuthModel')
@@ -42,29 +41,35 @@ const thisService = {
                     console.log('Password was invalid')
                     
                 }
-                //console.log('login successful')
-                const expiresIn = 1
-                const accessTokenExpiresAt = new Date.now();
-                // accessTokenExpiresAt.setSeconds(accessTokenExpiresAt.getSeconds() + expiresIn)
-                console.log(accessTokenExpiresAt);
-
-                const accessToken = jwt.sign({
-                    email: thisUser.email,
-                    phoneNumber: thisUser.phoneNumber,
-                    userName: userName
-                },'secret',
-                {
-                    expiresIn : '1h'
+                const accessTokenExpiresAt = new Date()
+                console.log(accessTokenExpiresAt)
+                const signOptionsAccessToken = {
+                    ...config.session.JWT,
+                    expiresIn : config.auth.expires.accessToken
                 }
-            );
+                const payloadAccessToken = {
+                    userName : thisUser.userName,
+                    email : thisUser.email,
+                    phoneNumber : thisUser.phoneNumber
+                }
 
-            const UserAuth = new userAuthToken()
-            UserAuth.userName = userName
-            UserAuth.accessToken = accessToken
-            UserAuth.accessTokenExpire = accessTokenExpiresAt
-            await UserAuth.save()
-            
-            console.log({Message: 'Auth Successful',token : accessToken})
+
+                const expiresIn = config.auth.expires.accessToken;
+                accessTokenExpiresAt.setSeconds(accessTokenExpiresAt.getSeconds() + expiresIn)
+                
+
+                const accessToken = jwt.sign(payloadAccessToken,'secret',signOptionsAccessToken)
+
+                const UserAuth = new userAuthToken()
+                UserAuth.userName = userName
+                UserAuth.accessToken = accessToken
+                UserAuth.accessTokenExpiresAt = accessTokenExpiresAt
+                await UserAuth.save()
+                
+                resData = {
+                    Message: 'Auth Successful',token : accessToken
+                }
+                return resData
             }
             else {
                 console.log({Message:'Username was invalid'})
@@ -85,9 +90,15 @@ const thisService = {
             }
         }    
     },
-    async revokeAccessToken(accessToken,userName,pushToken){
-        console.log('revoke called' ,accessToken);
-    }
+    async revokeAccessToken(accessToken){
+        console.log('revoke called',accessToken);
+        await userAuthToken.findOneAndDelete({accessToken})
+        const res = {
+            message: 'logged out!',
+        }
+        return res
+    },
+    
 }
 
 

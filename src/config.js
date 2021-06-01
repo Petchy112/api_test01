@@ -8,9 +8,15 @@ module.exports = config = {
     },
     auth : {
         expires : {
-            accessToken : 60 * 60,
-            refreshToken : 7 * 24 * 60 * 60
+            accessToken : 60 * 60, 
         }
+    },
+    session : {
+        JWT : {
+            issuer : 'JWT',
+            algorithm : 'HS256'
+        },
+        key : 'secret'
     }
 
 }

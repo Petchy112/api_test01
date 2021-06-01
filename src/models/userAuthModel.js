@@ -10,7 +10,7 @@ var schema = mongoose.Schema (
             type:String,
             require:false
         },
-        accessTokenExpire:{
+        accessTokenExpiresAt:{
             type:Date,
             require:false
         },
