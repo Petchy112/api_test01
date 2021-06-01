@@ -7,6 +7,7 @@ const withAuth = require('../middlewares/withAuth')
 
 
 
+
 router.post('/register',async(req,res,next) => {
     try {
         var {body} = req
@@ -67,8 +68,7 @@ router.post('/register',async(req,res,next) => {
        next(error);
     }
 })
-
-router.post('/login',async (req,res,next) => {
+router.post('/login',async(req,res,next) => {
     try{
         var {body} = req
         // var errors = new UniversalError()
@@ -90,26 +90,26 @@ router.post('/login',async (req,res,next) => {
         next(error);
     }
 })
-router.post('/change/password',async (req,res,next) => {
+router.post('/changePassword',withAuth,async(req,res,next) => {
     try {
-        var {body} = req
+        var {oldPassword,newPassword,confirmPassword} = req.body
         //var errors = new UniversalError()
-        if(!body.oldPassword) {
+        if(!oldPassword) {
             await res.json('Old password was empty')
             return
             //errors.addError('empty/oldPassword','old password was empty');
         }
-        if(!body.newPassword) {
+        if(!newPassword) {
             await res.json('New password was empty');
             return
             //errors.addError('empty/newPassword','New password was empty');
         }
-        if(!body.confirmPassword){
+        if(!confirmPassword){
             await res.json('New Password was empty');
             return
             //errors.addError('empty/confirmPassword','Confirm password was empty');
         }
-        if(body.confirmPassword !== body.newPassword){
+        if(confirmPassword !== newPassword){
             await res.json('Password is not match!')
             return
             //errors.addError('match/password','Password not match');
@@ -117,18 +117,24 @@ router.post('/change/password',async (req,res,next) => {
         // if(errors.amount > 0){
         //     throw errors
         // }
-        const user = await userService.changePassword(req.query.userName,body.oldPassword,body.newPassword)
+        const user = await userService.changePassword(userName,oldPassword,newPassword)
         res.json({Message:'Password Changed'})
     }
     catch(error){
         next(error)
     }
 })
-
-router.post('/logout',async(req,res) => {
-    const logout = await userService.revokeAccessToken(req.headers.authorization)
-    console.log(req.headers.authorization)
+router.post('/logout',withAuth,async(req,res) => {
+    const logout = await userService.revokeAccessToken(req.headers.authorization.replace('Bearer ',''))
     res.json(logout)
 })
-
+router.get('/data',withAuth,async(req,res) => {
+    try{
+        const result = await userService.getResult(accesstoken)
+        res.json(result)
+    }
+    catch (error) {
+        error
+    }
+})
 module.exports = router

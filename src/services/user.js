@@ -39,12 +39,11 @@ const thisService = {
             var thisUser = await User.findOne({userName})
         
             if(thisUser) {
-                if(thisUser.passwordHash !== password){
+                if(thisUser.passwordHash !== sha1(password)){
                     console.log('Password was invalid')
                     
                 }
                 const accessTokenExpiresAt = new Date()
-                console.log(accessTokenExpiresAt)
                 const signOptionsAccessToken = {
                     ...config.session.JWT,
                     expiresIn : config.auth.expires.accessToken
@@ -83,11 +82,11 @@ const thisService = {
         
         if(thisUser) {
             console.log(thisUser.passwordHash)
-            if(thisUser.passwordHash !== oldPassword){
+            if(thisUser.passwordHash !== sha1(oldPassword)){
                 console.log('Old password was invalid')
             }
             else{
-                thisUser.passwordHash = newPassword
+                thisUser.passwordHash = sha1(newPassword)
                 thisUser.save()
             }
         }    
@@ -100,7 +99,19 @@ const thisService = {
         }
         return res
     },
-    
+    async getUser(accessToken){
+        console.log('get data',accessToken)
+        const userTokenData = userAuthToken.findOne({accessToken})
+        if(userTokenData){
+            const userData = User.findOne({userName:userTokenData.userName})
+            const result = {
+                firstName = userdata.firstName,
+                lastName = userdata.lastName,
+                email = userdata.email,
+                phoneNumber = userdata.phoneNumber
+            }
+        }
+    }
 }
 
 

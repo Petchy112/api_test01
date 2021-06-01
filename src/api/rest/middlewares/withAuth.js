@@ -17,16 +17,15 @@ class checkAuth {
 
 module.exports = async(req=checkAuth,res,next) => {
     try {
-        if(req.headers.Authorization){
-            console.log(req.headers)
-            const token = req.headers.Authorization.replace('Bearer','')
+        if(req.headers.authorization){
+            const token = req.headers.authorization.replace('Bearer ','')
             const tokenData = userAuth.findOne({accessToken:token})
             if(tokenData) {
-                const userData = User.findOne({_id:tokenData.userName})
-                if(userData && tokenData.accessTokenExpires && tokenData.accessTokenExpires > new Date()) {
-                    req.accessToken = userTokenData.accessToken
-                    req.accessTokenExpires = userTokenData.accessTokenExpires
-                    req.userName = userToken.userName
+                const userData = User.findOne({userName:tokenData.userName})
+                if(userData && tokenData.accessTokenExpiresAt && tokenData.accessTokenExpiresAt > new Date()) {
+                    req.accessToken = tokenData.accessToken
+                    req.accessTokenExpires = tokenData.accessTokenExpires
+                    req.userName = tokenData.userName
                     next()
                 }
                 else{
