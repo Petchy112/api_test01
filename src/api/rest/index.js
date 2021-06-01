@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 routes(app)
 
 app.use((error,req,res,next) => {
-    if(error.message === '') {
+    if(error.message === 'nothing') {
         return
     }
     if(error.universal) {
@@ -23,7 +23,7 @@ app.use((error,req,res,next) => {
         error.status = undefined
         error.amount = undefined
         error.universal = undefined
-        response(status).json({error : [{message:error.message, ...error } ] })
+        res(status).json({error : [{message:error.message, ...error } ] })
         return
     }
     throw error
