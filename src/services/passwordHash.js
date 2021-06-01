@@ -1,5 +1,6 @@
+const {argon2i} = require('argon2')
 const upash = require('upash')
-upash.install('bcrypt', require('@phc/bcrypt'));
+upash.install(argon2i,'argon2-ffi')
 
 const passwordHashFunction = {
     async CreatePasswordHash(password) {
@@ -9,12 +10,5 @@ const passwordHashFunction = {
         await upash.verify(passwordHash,password)
     }
 }
-
-
-
-
-
-
-
 
 module.exports = passwordHashFunction

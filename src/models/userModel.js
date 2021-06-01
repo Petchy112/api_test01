@@ -10,10 +10,6 @@ var schema = mongoose.Schema (
             type:String,
             require:true
         },
-        // confirmPassword : {
-        //     type:String,
-        //     require:true
-        // },
         firstName : {
             type:String,
             require:true

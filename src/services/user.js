@@ -1,5 +1,11 @@
 const User = require('../models/userModel')
-const UniversalError = require('../error/universalError')
+const UniversalError = require('../error/UniversalError');
+const { response } = require('express');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+const userAuthToken = require('../models/userAuthModel')
+
+
 
 const thisService = {
     async register(input) {
@@ -24,6 +30,7 @@ const thisService = {
             return
         }
         await user.save()
+
     },
     async login(userName,password) {
         console.log('login called', userName)
@@ -33,14 +40,35 @@ const thisService = {
             if(thisUser) {
                 if(thisUser.passwordHash !== password){
                     console.log('Password was invalid')
-                    return
-                }else {
-                    console.log('login successful')
+                    
                 }
+                //console.log('login successful')
+                const expiresIn = 1
+                const accessTokenExpiresAt = new Date.now();
+                // accessTokenExpiresAt.setSeconds(accessTokenExpiresAt.getSeconds() + expiresIn)
+                console.log(accessTokenExpiresAt);
+
+                const accessToken = jwt.sign({
+                    email: thisUser.email,
+                    phoneNumber: thisUser.phoneNumber,
+                    userName: userName
+                },'secret',
+                {
+                    expiresIn : '1h'
+                }
+            );
+
+            const UserAuth = new userAuthToken()
+            UserAuth.userName = userName
+            UserAuth.accessToken = accessToken
+            UserAuth.accessTokenExpire = accessTokenExpiresAt
+            await UserAuth.save()
+            
+            console.log({Message: 'Auth Successful',token : accessToken})
             }
             else {
-                console.log('Username was invalid')
-                
+                console.log({Message:'Username was invalid'})
+                return
             }
         },
     async changePassword(userName,oldPassword,newPassword){
@@ -50,13 +78,15 @@ const thisService = {
             console.log(thisUser.passwordHash)
             if(thisUser.passwordHash !== oldPassword){
                 console.log('Old password was invalid')
-            }else{
+            }
+            else{
                 thisUser.passwordHash = newPassword
                 thisUser.save()
             }
-           
-            
         }    
+    },
+    async revokeAccessToken(accessToken,userName,pushToken){
+        console.log('revoke called' ,accessToken);
     }
 }
 
