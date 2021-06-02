@@ -18,6 +18,7 @@ class checkAuth {
 module.exports = async(req=checkAuth,res,next) => {
     try {
         if(req.headers.authorization){
+            console.log(req.headers.authorization)
             const token = req.headers.authorization.replace('Bearer ','')
             const tokenData = userAuth.findOne({accessToken:token})
             if(tokenData) {

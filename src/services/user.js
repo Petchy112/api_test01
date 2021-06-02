@@ -104,11 +104,14 @@ const thisService = {
         const userTokenData = userAuthToken.findOne({accessToken})
         if(userTokenData){
             const userData = User.findOne({userName:userTokenData.userName})
-            const result = {
-                firstName = userdata.firstName,
-                lastName = userdata.lastName,
-                email = userdata.email,
-                phoneNumber = userdata.phoneNumber
+            if(userData){
+                const result = {
+                    firstName = userData.firstName,
+                    lastName = userData.lastName,
+                    email = userData.email,
+                    phoneNumber = userData.phoneNumber
+                }
+                return result
             }
         }
     }
